@@ -12,7 +12,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -47,10 +52,11 @@ public class PostController {
     ) {
         System.out.println(bindingResult.hasErrors());
         if(bindingResult.hasErrors()) {
-            FieldError fieldError = bindingResult.getFieldError();
-
-            String errorFieldName = fieldError.getField();
-            String errorMessage = fieldError.getDefaultMessage();
+            String errorMessage = bindingResult
+                    .getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .collect(Collectors.joining("<br>"));
             return getWriteFormHtml(errorMessage, "", "");
         }
         Post post = postService.write(writeForm.getTitle(), writeForm.getContent());
