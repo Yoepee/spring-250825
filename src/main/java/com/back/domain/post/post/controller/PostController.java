@@ -9,13 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -26,6 +20,15 @@ public class PostController {
     @GetMapping("/write")
     public String showWrite() {
         return "post/post/write";
+    }
+
+    @GetMapping("/detail/{id}")
+    @Transactional(readOnly = true)
+    public String showDetail(@PathVariable("id") int id, Model model) {
+        Post post = postService.findById(id);
+        if (post == null) return null;
+        model.addAttribute("post", post);
+        return "post/post/detail";
     }
 
     @PostMapping("/write")
@@ -41,6 +44,6 @@ public class PostController {
         Post post = postService.write(writeForm.getTitle(), writeForm.getContent());
         model.addAttribute("post", post);
 
-        return "post/post/list";
+        return "redirect:/posts/detail/%d".formatted(post.getId());
     }
 }

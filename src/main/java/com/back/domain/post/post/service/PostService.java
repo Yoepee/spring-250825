@@ -17,4 +17,8 @@ public class PostService {
         Post post = new Post(title, content);
         return postRepository.save(post);
     }
+
+    public Post findById(int id) {
+        return postRepository.findById(id).orElseThrow(RuntimeException::new);
+    }
 }
