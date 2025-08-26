@@ -10,15 +10,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
-@Validated
 @RequestMapping("/posts")
 public class PostController {
     private final PostService postService;
@@ -45,9 +42,17 @@ public class PostController {
     @ResponseBody
     @Transactional
     public String write(
-            @Valid WriteForm writeForm
-//            @ModelAttribute("writeForm") WriteForm writeForm
+            @Valid WriteForm writeForm,
+            BindingResult bindingResult
     ) {
+        System.out.println(bindingResult.hasErrors());
+        if(bindingResult.hasErrors()) {
+            FieldError fieldError = bindingResult.getFieldError();
+
+            String errorFieldName = fieldError.getField();
+            String errorMessage = fieldError.getDefaultMessage();
+            return getWriteFormHtml(errorMessage, "", "");
+        }
         Post post = postService.write(writeForm.getTitle(), writeForm.getContent());
 
         return "%d번 글이 생성되었습니다.".formatted(post.getId());
