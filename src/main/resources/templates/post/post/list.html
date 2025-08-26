@@ -1,1 +1,21 @@
-<h1>[[${post.id}]] 번 게시글 등록 완료</h1>
+<div>
+    <a th:href="@{/posts/write}" class="btn btn-primary">게시글 등록하기</a>
+    <table class="table">
+        <thead class="table-dark">
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성일</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="post:${posts}" th:object="${post}">
+                <td th:text="${post.id}"></td>
+                <td>
+                    <a th:href="@{/posts/detail/${post.id}}" th:text="${post.title}"></a>
+                </td>
+                <td th:text="${#temporals.format(post.createdDate, 'yy.MM.dd')}"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

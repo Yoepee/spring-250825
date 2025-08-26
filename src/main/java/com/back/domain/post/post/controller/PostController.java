@@ -11,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/posts")
@@ -18,7 +20,7 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/write")
-    public String showWrite() {
+    public String showWrite(@ModelAttribute("form") PostWriteForm writeForm) {
         return "post/post/write";
     }
 
@@ -29,6 +31,13 @@ public class PostController {
         if (post == null) return null;
         model.addAttribute("post", post);
         return "post/post/detail";
+    }
+
+    @GetMapping("/list")
+    public String showList(Model model) {
+        List<Post> posts = postService.findAll();
+        model.addAttribute("posts", posts);
+        return "post/post/list";
     }
 
     @PostMapping("/write")
