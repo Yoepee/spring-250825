@@ -1,4 +1,4 @@
-<div style="color:red;" th:utext="${errorMessage}"></div>
+<div style="color:red;white-space: pre-wrap" th:text="${errorMessage}"></div>
 <form action="doWrite" method="post">
     <input type="text" name="title" placeholder="제목" autofocus>
     <br>

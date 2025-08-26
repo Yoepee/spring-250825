@@ -55,7 +55,7 @@ public class PostController {
                     .getFieldErrors()
                     .stream()
                     .map(FieldError::getDefaultMessage)
-                    .collect(Collectors.joining("<br>"));
+                    .collect(Collectors.joining("\n"));
             model.addAttribute("errorMessage", errorMessage);
             return "post/post/write";
         }
