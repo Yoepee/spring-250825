@@ -36,12 +36,6 @@ public class PostController {
             Model model
     ) {
         if(bindingResult.hasErrors()) {
-            String errorMessage = bindingResult
-                    .getFieldErrors()
-                    .stream()
-                    .map(FieldError::getDefaultMessage)
-                    .collect(Collectors.joining("\n"));
-            model.addAttribute("errorMessage", errorMessage);
             return "post/post/write";
         }
         Post post = postService.write(writeForm.getTitle(), writeForm.getContent());
