@@ -26,7 +26,7 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/write")
-    public String write(WriteForm writeForm) {
+    public String showWrite() {
         return "post/post/write";
     }
 
@@ -44,7 +44,7 @@ public class PostController {
 
     @PostMapping("/doWrite")
     @Transactional
-    public String write(
+    public String doWrite(
             @Valid WriteForm writeForm,
             BindingResult bindingResult,
             Model model
