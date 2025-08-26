@@ -4,6 +4,7 @@ import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -26,10 +27,15 @@ public class PostController {
                 """;
     }
 
-    @PostMapping("/write")
+    @PostMapping("/doWrite")
     @ResponseBody
-    public Post write(@RequestParam("title") String title, @RequestParam("content") String content) {
+    @Transactional
+    public String write(
+            @RequestParam(defaultValue = "") String title,
+            @RequestParam(defaultValue = "") String content
+    ) {
         Post post = postService.write(title, content);
-        return post;
+
+        return "%d번 글이 생성되었습니다.".formatted(post.getId());
     }
 }
