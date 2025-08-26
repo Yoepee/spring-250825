@@ -46,6 +46,7 @@ public class PostController {
     @Transactional
     public String write(
             @Valid WriteForm writeForm
+//            @ModelAttribute("writeForm") WriteForm writeForm
     ) {
         Post post = postService.write(writeForm.getTitle(), writeForm.getContent());
 
