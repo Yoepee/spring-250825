@@ -16,7 +16,7 @@ public class PostController {
     @ResponseBody
     public String write() {
         return """
-                <form action="http://localhost:8080/posts/doWrite" target="_blank" method="post">
+                <form action="doWrite" target="_blank" method="post">
                   <input type="text" name="title" placeholder="제목" value="안녕">
                   <br>
                   <textarea name="content" placeholder="내용">내용</textarea>
