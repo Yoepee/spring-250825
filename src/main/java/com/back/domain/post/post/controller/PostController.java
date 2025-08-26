@@ -26,7 +26,7 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/write")
-    public String write() {
+    public String write(WriteForm writeForm) {
         return "post/post/write";
     }
 
@@ -49,7 +49,6 @@ public class PostController {
             BindingResult bindingResult,
             Model model
     ) {
-        System.out.println(bindingResult.hasErrors());
         if(bindingResult.hasErrors()) {
             String errorMessage = bindingResult
                     .getFieldErrors()
