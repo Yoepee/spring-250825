@@ -1,8 +1,10 @@
 <div style="color:red;white-space: pre-wrap" th:text="${errorMessage}"></div>
-<form method="post">
-    <input type="text" name="title" placeholder="제목" th:value="${writeForm?.title}" autofocus>
+<form method="post" th:object="${form}">
+    <label for="title">제목: </label>
+    <input type="text" id="title" name="title" th:value="*{title}" placeholder="제목" autofocus>
     <br>
-    <textarea name="content" placeholder="내용" th:text="${writeForm?.content}"></textarea>
+    <label for="content">내용: </label>
+    <textarea id="content" name="content" th:text="*{content}" placeholder="내용"></textarea>
     <br>
     <input type="submit" value="작성">
 </form>
