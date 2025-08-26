@@ -10,12 +10,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.stream.Collectors;
 
@@ -26,9 +26,8 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/write")
-    @ResponseBody
     public String write() {
-        return getWriteFormHtml("", "", "");
+        return "post/post/write";
     }
 
     @AllArgsConstructor
@@ -44,11 +43,11 @@ public class PostController {
     }
 
     @PostMapping("/doWrite")
-    @ResponseBody
     @Transactional
     public String write(
             @Valid WriteForm writeForm,
-            BindingResult bindingResult
+            BindingResult bindingResult,
+            Model model
     ) {
         System.out.println(bindingResult.hasErrors());
         if(bindingResult.hasErrors()) {
@@ -57,23 +56,12 @@ public class PostController {
                     .stream()
                     .map(FieldError::getDefaultMessage)
                     .collect(Collectors.joining("<br>"));
-            return getWriteFormHtml(errorMessage, "", "");
+            model.addAttribute("errorMessage", errorMessage);
+            return "post/post/write";
         }
         Post post = postService.write(writeForm.getTitle(), writeForm.getContent());
+        model.addAttribute("post", post);
 
-        return "%d번 글이 생성되었습니다.".formatted(post.getId());
-    }
-
-    private String getWriteFormHtml(String errorMessage, String title, String content){
-        return """
-                <div style="color:red;">%s</div>
-                <form action="doWrite" method="post">
-                  <input type="text" name="title" placeholder="제목" value="%s" autofocus>
-                  <br>
-                  <textarea name="content" placeholder="내용">%s</textarea>
-                  <br>
-                  <input type="submit" value="작성">
-                </form>
-                """.formatted(errorMessage, title, content);
+        return "post/post/list";
     }
 }
