@@ -31,4 +31,8 @@ public class MemberService {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return passwordEncoder.matches(password, formPassword);
     }
+
+    public Member findById(int id) {
+        return memberRepository.findById(id).orElseThrow(() -> new RuntimeException());
+    }
 }

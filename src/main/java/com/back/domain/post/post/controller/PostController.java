@@ -1,5 +1,6 @@
 package com.back.domain.post.post.controller;
 
+import com.back.domain.member.member.entity.Member;
 import com.back.domain.post.post.dto.PostWriteForm;
 import com.back.domain.post.post.entity.Post;
 import com.back.domain.post.post.service.PostService;
@@ -50,7 +51,8 @@ public class PostController {
         if(bindingResult.hasErrors()) {
             return "post/post/write";
         }
-        Post post = postService.write(writeForm.getTitle(), writeForm.getContent());
+        Member member = null;
+        Post post = postService.write(member, writeForm.getTitle(), writeForm.getContent());
         model.addAttribute("post", post);
 
         return "redirect:/posts/detail/%d".formatted(post.getId());
