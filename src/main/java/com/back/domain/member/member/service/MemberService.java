@@ -12,6 +12,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public long count() {
         return memberRepository.count();
@@ -22,9 +23,12 @@ public class MemberService {
     }
 
     public Member create(String username, String password, String email) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
         Member member = new Member(username, passwordEncoder.encode(password), email);
         return memberRepository.save(member);
+    }
+
+    public boolean isSamePassword(String formPassword, String password){
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.matches(password, formPassword);
     }
 }

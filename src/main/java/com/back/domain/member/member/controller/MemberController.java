@@ -26,16 +26,6 @@ public class MemberController {
         return "member/member/login";
     }
 
-    @PostMapping("/login")
-    public String login(@Valid LoginForm loginForm, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "member/member/login";
-        }
-        System.out.println("loginForm"+loginForm);
-
-        return "post/post/list";
-    }
-
     @GetMapping("/register")
     public String showRegister(RegisterForm registerForm) {
         return "member/member/register";
