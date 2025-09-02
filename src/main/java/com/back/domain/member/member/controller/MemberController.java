@@ -1,15 +1,18 @@
 package com.back.domain.member.member.controller;
 
+import com.back.domain.member.member.dto.LoginForm;
 import com.back.domain.member.member.dto.RegisterForm;
+import com.back.domain.member.member.entity.Member;
 import com.back.domain.member.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,8 +21,18 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/login")
-    public String join(Model model) {
+    public String showLogin(LoginForm loginForm) {
         return "member/member/login";
+    }
+
+    @PostMapping("/login")
+    public String login(@Valid LoginForm loginForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "member/member/login";
+        }
+        System.out.println("loginForm"+loginForm);
+
+        return "post/post/list";
     }
 
     @GetMapping("/register")
@@ -32,7 +45,18 @@ public class MemberController {
         if (bindingResult.hasErrors()) {
             return "member/member/register";
         }
-        System.out.println("registerForm"+registerForm);
+        if (!registerForm.getPassword().equals(registerForm.getPassword_conform())) {
+            bindingResult.rejectValue("password","checkedPassword","비밀번호가 일치하지 않습니다.");
+            return "member/member/register";
+        }
+
+        Optional<Member> opMember = memberService.findByUsername(registerForm.getUsername());
+        if (opMember.isPresent()) {
+            bindingResult.rejectValue("username","checkedMemberByUsername","이미 존재하는 계정입니다.");
+            return "member/member/register";
+        }
+
+        memberService.create(registerForm.getUsername(), registerForm.getPassword(), registerForm.getEmail());
 
         return "post/post/list";
     }
