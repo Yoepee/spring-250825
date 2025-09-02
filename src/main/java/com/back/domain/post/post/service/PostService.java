@@ -33,7 +33,7 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    public void update(Post post, String title, String content) {
+    public void modify(Post post, String title, String content) {
         post.setTitle(title);
         post.setContent(content);
         postRepository.save(post);

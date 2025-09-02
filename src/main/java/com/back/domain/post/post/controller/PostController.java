@@ -79,25 +79,28 @@ public class PostController {
         return "redirect:/posts/list";
     }
 
-    @GetMapping("/update/{id}")
-    public String showUpdate(@ModelAttribute("form") PostWriteForm writeForm, @PathVariable int id, Model model) {
+    @GetMapping("/modify/{id}")
+    public String showModify(@ModelAttribute("form") PostWriteForm writeForm, @PathVariable int id, Model model, Principal principal) {
         Post post = postService.findById(id);
         if (post == null) return null;
+
+        if (!post.getAuthor().getUsername().equals(principal.getName())) {
+            throw new RuntimeException("수정 권한이 없습니다.");
+        }
         model.addAttribute("post", post);
         writeForm.setTitle(post.getTitle());
         writeForm.setContent(post.getContent());
-        return "post/post/update";
+        return "post/post/modify";
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/modify/{id}")
     @Transactional
     @PreAuthorize("isAuthenticated()")
     public String update(@PathVariable Integer id,@ModelAttribute("form") @Valid PostWriteForm writeForm,
                          BindingResult bindingResult,
-                         Model model,
                          Principal principal) {
         if(bindingResult.hasErrors()) {
-            return "post/post/update";
+            return "post/post/modify";
         }
         Post post = postService.findById(id);
         if (post == null) return null;
@@ -105,7 +108,7 @@ public class PostController {
         if (!post.getAuthor().getUsername().equals(principal.getName())) {
             throw new RuntimeException("수정 권한이 없습니다.");
         }
-        postService.update(post, writeForm.getTitle(), writeForm.getContent());
+        postService.modify(post, writeForm.getTitle(), writeForm.getContent());
 
         return "redirect:/posts/detail/%d".formatted(post.getId());
     }

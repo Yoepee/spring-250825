@@ -1,19 +1,18 @@
 <html layout:decorate="~{/common/layout/layout}">
 <div layout:fragment="content">
-<h3>[[${post.id}]]번</h3>
-<h2>[[${post.title}]]</h2>
-<p>[[${post.content}]]</p>
+    <h3>[[${post.id}]]번</h3>
+    <h2>[[${post.title}]]</h2>
+    <p>[[${post.content}]]</p>
     <div>
         <a href="/posts/list">글 목록</a>
     </div>
+    <a sec:authorize="isAuthenticated()"
+       th:if="${post.author != null and #authentication.name == post.author.username}"
+       th:href="@{/posts/modify/{postId}(postId=${post.id})}">수정</a>
     <form sec:authorize="isAuthenticated()"
           th:if="${post.author != null and #authentication.name == post.author.username}"
           th:action="@{/posts/delete/{postId}(postId=${post.id})}" method="post">
         <input type="submit" value="삭제"/>
     </form>
-    <a
-            sec:authorize="isAuthenticated()"
-            th:if="${post.author != null and #authentication.name == post.author.username}"
-            th:href="@{/posts/update/{postId}(postId=${post.id})}">수정</a>
 </div>
 </html>

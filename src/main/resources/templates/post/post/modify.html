@@ -1,6 +1,6 @@
 <html layout:decorate="~{/common/layout/layout}">
 <div layout:fragment="content">
-    <form th:action="@{/posts/update/{postId}(postId=${post.id})}" method="post" th:object="${form}">
+    <form th:action="@{/posts/modify/{postId}(postId=${post.id})}" method="post" th:object="${form}">
         <ul th:if="${#fields.hasAnyErrors()}">
             <li th:each="err:${#fields.allErrors()}" th:text="${err}" style="color:red;"></li>
         </ul>
