@@ -6,6 +6,7 @@ import com.back.domain.member.member.entity.Member;
 import com.back.domain.member.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,7 +57,17 @@ public class MemberController {
             return "member/member/register";
         }
 
-        memberService.create(registerForm.getUsername(), registerForm.getPassword(), registerForm.getEmail());
+        try {
+            memberService.create(registerForm.getUsername(), registerForm.getPassword(), registerForm.getEmail());
+        }catch (DataIntegrityViolationException e){
+            e.printStackTrace();
+            bindingResult.reject("registerError",e.getMessage());
+            return  "member/member/register";
+        }catch (Exception e) {
+            e.printStackTrace();
+            bindingResult.reject("registerError", e.getMessage());
+            return "member/member/register";
+        }
 
         return "post/post/list";
     }
