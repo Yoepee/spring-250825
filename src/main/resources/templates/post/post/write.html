@@ -1,3 +1,5 @@
+<html layout:decorate="~{/common/layout/layout}">
+<div layout:fragment="content">
 <form th:action="@{/posts/write}" method="post" th:object="${form}">
     <ul th:if="${#fields.hasAnyErrors()}">
         <li th:each="err:${#fields.allErrors()}" th:text="${err}" style="color:red;"></li>
@@ -10,3 +12,5 @@
     <br>
     <input type="submit" value="작성">
 </form>
+</div>
+</html>

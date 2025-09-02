@@ -2,7 +2,13 @@ package com.back.domain.member.member.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@ToString
 public class LoginForm {
     @Size(min=3, max=25)
     @NotBlank(message="아이디는 필수 입니다.")
