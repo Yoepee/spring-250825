@@ -1,9 +1,7 @@
 <html layout:decorate="~{/common/layout/layout}">
 <div layout:fragment="content">
-    <form th:action="@{/posts/modify/{postId}(postId=${post.id})}" method="post" th:object="${form}">
-        <ul th:if="${#fields.hasAnyErrors()}">
-            <li th:each="err:${#fields.allErrors()}" th:text="${err}" style="color:red;"></li>
-        </ul>
+    <form th:action="@{|/posts/modify/${id}|}" method="post" th:object="${form}">
+        <div th:replace="~{/common/fragment/errors::errorsFragment}"></div>
         <label for="title">제목: </label>
         <input type="text" th:field="*{title}" placeholder="제목" autofocus>
         <br>

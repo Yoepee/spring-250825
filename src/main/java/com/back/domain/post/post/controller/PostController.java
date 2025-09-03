@@ -58,7 +58,7 @@ public class PostController {
         }
         String username = principal.getName();
         Member member = memberService.findByUsername(username).orElseThrow(() -> new RuntimeException());
-        Post post = postService.write(member, writeForm.getTitle(), writeForm.getContent());
+        Post post = postService.write(member, writeForm.title(), writeForm.content());
         model.addAttribute("post", post);
 
         return "redirect:/posts/detail/%d".formatted(post.getId());
@@ -80,23 +80,22 @@ public class PostController {
     }
 
     @GetMapping("/modify/{id}")
-    public String showModify(@ModelAttribute("form") PostWriteForm writeForm, @PathVariable int id, Model model, Principal principal) {
+    public String showModify(@PathVariable int id, Model model, Principal principal) {
         Post post = postService.findById(id);
         if (post == null) return null;
 
         if (!post.getAuthor().getUsername().equals(principal.getName())) {
             throw new RuntimeException("수정 권한이 없습니다.");
         }
-        model.addAttribute("post", post);
-        writeForm.setTitle(post.getTitle());
-        writeForm.setContent(post.getContent());
+        model.addAttribute("id", post.getId());
+        model.addAttribute("form", new PostWriteForm(post.getTitle(), post.getContent()));
         return "post/post/modify";
     }
 
     @PostMapping("/modify/{id}")
     @Transactional
     @PreAuthorize("isAuthenticated()")
-    public String update(@PathVariable Integer id,@ModelAttribute("form") @Valid PostWriteForm writeForm,
+    public String modify(@PathVariable Integer id,@ModelAttribute("form") @Valid PostWriteForm writeForm,
                          BindingResult bindingResult,
                          Principal principal) {
         if(bindingResult.hasErrors()) {
@@ -108,7 +107,7 @@ public class PostController {
         if (!post.getAuthor().getUsername().equals(principal.getName())) {
             throw new RuntimeException("수정 권한이 없습니다.");
         }
-        postService.modify(post, writeForm.getTitle(), writeForm.getContent());
+        postService.modify(post, writeForm.title(), writeForm.content());
 
         return "redirect:/posts/detail/%d".formatted(post.getId());
     }
